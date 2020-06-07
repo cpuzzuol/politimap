@@ -1,0 +1,5 @@
+# Change to development mode
+vue-cli-service build --mode development
+
+The ProPublica Congress API does not offer an endpoint to retrieve an image of a member of Congress.
+Instead, we recommend that developers use the images provided by the United States project on GitHub.
