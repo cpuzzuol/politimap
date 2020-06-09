@@ -5,9 +5,9 @@
       <v-col
           cols="12"
           xs="12"
-          sm="12"
-          md="6"
-          lg="6"
+          sm="6"
+          md="4"
+          lg="4"
           v-for="(senator, index) in senators"
           :key="'sen-' + index"
       >
@@ -33,10 +33,13 @@ export default {
     }
   },
   methods: {
+    // Fetches the Senators from AWS (the AWS db is accessible via AWS API Gateway.
+    // The db is accessed via an AWS lambda function
+    // The Db is populated via the propub API, whose key is in the env file. A lambda function uses the API to populate the db)
     getData() {
-      this.$http.get('https://api.propublica.org/congress/v1/116/senate/members.json')
+      this.$http.get('https://twjp60odn0.execute-api.us-east-1.amazonaws.com/default/mysql_read', {headers: {'X-Api-Key': 'hSA8ANq2Vj7WPMQCLnkma4YkhUeaJlAa8Tfp0l21'}})
       .then(r => {
-        this.senators = r.data.results[0].members
+        this.senators = r.data
       })
       .catch(e => {
         console.log(e)

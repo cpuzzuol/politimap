@@ -4,7 +4,7 @@
       <v-img
           :src="'images/congress/225x275/' + person.id + '.jpg'"
           :gradient="partyGradient(person.party)"
-          max-width="225"
+          max-width="125"
           contain
           style="border-radius: 5%"
       >
@@ -48,15 +48,6 @@ export default {
     }
   },
   methods: {
-    getPersonExtra() {
-      this.$http.get('https://api.propublica.org/congress/v1/members/A000360.json')
-      .then(r => {
-        this.personExtra = r.data
-      })
-      .catch(e => {
-        console.log(e)
-      })
-    }
   }
 }
 </script>
@@ -75,15 +66,15 @@ export default {
     position: absolute;
     bottom: 8px;
     right: 8px;
-    width: 50px;
-    height: 50px;
+    width: 30px;
+    height: 30px;
   }
   .R {
     background-image: url(/images/1920px-Republican_Disc.svg.png);
-    background-size: 50px;
+    background-size: 30px;
   }
   .D {
     background-image: url(/images/1920px-US_Democratic_Party_Logo.svg.png);
-    background-size: 50px;
+    background-size: 30px;
   }
 </style>

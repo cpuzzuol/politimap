@@ -16,7 +16,7 @@ const opts = {
   },
 }
 Vue.use(Vuetify)
-axios.defaults.headers.common['X-API-Key'] = process.env.VUE_APP_PROPUB_API_KEY;
+axios.defaults.headers.common['X-Api-Key'] = process.env.VUE_APP_LAMBDA_API_KEY;
 Vue.prototype.$http = axios
 Vue.prototype.$moment = moment
 
