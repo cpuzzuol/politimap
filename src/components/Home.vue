@@ -1,28 +1,50 @@
 <template>
   <div class="home-container">
     <h1>API HOME</h1>
-    {{ adminAreas }}
-<!--    <template v-for="area in adminAreas">-->
-      <ul>
-        <li v-for="(official, index) in getAreaOfficials(adminAreas[areaIndex])" :key="`official-${adminAreas[areaIndex]}-${index}`">
-          {{ official }}
-        </li>
-      </ul>
-<!--    </template>-->
+    <v-tabs
+            v-model="tab"
+            background-color="deep-purple accent-4"
+            class="elevation-2"
+            dark
+            vertical
+    >
+      <v-tabs-slider></v-tabs-slider>
 
-    <v-row>
-      <v-col
-          cols="12"
-          xs="12"
-          sm="6"
-          md="4"
-          lg="4"
-          v-for="(senator, index) in senators"
-          :key="'sen-' + index"
+      <v-tab
+              v-for="i in tabs"
+              :key="i"
+              :href="`#tab-${i}`"
       >
-        <PersonPod :person="senator"></PersonPod>
-      </v-col>
-    </v-row>
+        {{ translateAdminAreaName(adminAreas[i]) }}
+        <v-icon>
+          mdi-phone
+        </v-icon>
+      </v-tab>
+
+      <v-tab-item
+              v-for="i in tabs"
+              :key="i"
+              :value="'tab-' + i"
+      >
+        <v-card flat tile>
+          <v-card-text>
+            <v-row>
+              <v-col
+                  col="12"
+                  sm="6"
+                  md="4"
+                  lg="3"
+                  v-for="(official, index) in getAreaOfficials(adminAreas[i])" :key="`official-${adminAreas[i]}-${index}`"
+              >
+<!--                {{ getAreaOfficials(adminAreas[i]) }}-->
+                <PersonPod :person="official"></PersonPod>
+              </v-col>
+            </v-row>
+          </v-card-text>
+        </v-card>
+      </v-tab-item>
+
+    </v-tabs>
   </div>
 </template>
 
@@ -42,9 +64,11 @@ export default {
   data() {
     return {
       areaIndex: 2,
-      offices: [],
-      officials: [],
-      senators: []
+      senators: [],
+      prevIcon: false,
+      nextIcon: false,
+      tab: null,
+      tabs: 3
     }
   },
   computed: {
@@ -62,6 +86,19 @@ export default {
     }
   },
   methods: {
+    translateAdminAreaName(name) {
+      if(!name) return
+      switch (name) {
+        case 'country':
+          return 'Federal'
+        case 'administrativeArea1':
+          return 'State'
+        case 'administrativeArea2':
+          return 'County'
+        default:
+          return name.toUpperCase()
+      }
+    },
     // Fetches the Senators from AWS (the AWS db is accessible via AWS API Gateway.
     // The db is accessed via an AWS lambda function
     // The Db is populated via the propub API, whose key is in the env file. A lambda function uses the API to populate the db)
@@ -77,11 +114,10 @@ export default {
     },
 
     getGoogs() {
-      this.$http.get('https://www.googleapis.com/civicinfo/v2/representatives?address=9313 Liberty Court, Livonia, MI 48150&key=AIzaSyB63xFZV5j9RZOLH_bF-EvR3i5nUA26f58')
+      this.$http.get(`https://www.googleapis.com/civicinfo/v2/representatives?address=9313 Liberty Court, Livonia, MI 48150&key=${process.env.VUE_APP_GOOGLE_CIVICS_API_KEY}`)
       .then(r => {
-        console.log(r.data)
-        this.offices = r.data.offices
-        this.officials = r.data.officials
+        this.setOffices(r.data.offices)
+        this.setOfficials(r.data.officials)
       })
       .catch(e => {
         console.log(e)
@@ -104,7 +140,7 @@ export default {
         const indices = ofc.officialIndices
         // Push the appropriate officials onto the array
         indices.forEach(ind => {
-          areaOfficials.push(this.officials[ind])
+          areaOfficials.push({ officeIndex: offices.indexOf(ofc), data: this.officials[ind] })
         })
       })
 

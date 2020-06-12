@@ -2,14 +2,15 @@
   <div class="person-pod-container">
     <div class="person-img-container">
       <v-img
-          :src="'images/congress/225x275/' + person.id + '.jpg'"
-          :gradient="partyGradient(person.party)"
+          v-if="person.data.photoUrl"
+          :src="person.data.photoUrl"
+          :gradient="partyGradient(party)"
           max-width="125"
           contain
           style="border-radius: 5%"
       >
         <template v-slot:default>
-          <div class="logo-overlay" :class="person.party"></div>
+          <div class="logo-overlay" :class="party"></div>
         </template>
         <template v-slot:placeholder>
           <v-row
@@ -23,8 +24,9 @@
       </v-img>
     </div>
     <div class="person-detail-container">
-      <p class="title">{{ person.last_name + ', ' + person.first_name }}</p>
-      <p style="position: absolute; bottom: 0; right: 0;">{{ person.state }}</p>
+      <p class="title">{{ person.data.name }}</p>
+      <p>{{ office.name }}</p>
+      {{ person.data.party }}
     </div>
   </div>
 </template>
@@ -45,6 +47,21 @@ export default {
   data() {
     return {
       personExtra: []
+    }
+  },
+  computed: {
+    office() {
+      return this.offices[this.person.officeIndex]
+    },
+    party() {
+      switch(this.person.data.party) {
+        case 'Republican Party':
+          return 'r_party'
+        case 'Democratic Party':
+          return 'd_party'
+        default:
+          return ''
+      }
     }
   },
   methods: {
@@ -69,12 +86,12 @@ export default {
     width: 30px;
     height: 30px;
   }
-  .R {
-    background-image: url(/images/1920px-Republican_Disc.svg.png);
+  .r_party {
+    background-image: url(/logos/Republican_Party_Logo.png);
     background-size: 30px;
   }
-  .D {
-    background-image: url(/images/1920px-US_Democratic_Party_Logo.svg.png);
+  .d_party {
+    background-image: url(/logos/Democratic_Party_Logo.png);
     background-size: 30px;
   }
 </style>

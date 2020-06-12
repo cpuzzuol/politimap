@@ -9,16 +9,16 @@ export const initMixin = {
 	},
 	computed: {
 		...mapGetters([]),
-		...mapState([]),
+		...mapState(['offices', 'officials']),
 	},
 	methods: {
 		...mapActions([]),
-		...mapMutations([]),
+		...mapMutations(['setOffices', 'setOfficials']),
 		partyGradient(party) {
 			switch (party) {
-				case 'D':
+				case 'd_party':
 					return '0deg, rgba(0,174,243,1) 0%, rgba(0,174,243,0.12086841572566531) 5%, rgba(0,174,243,0) 100%'
-				case 'R':
+				case 'r_party':
 					return '0deg, rgba(232,27,35,1) 0%, rgba(232,27,35,0.1740897042410714) 5%, rgba(232,27,35,0) 100%'
 				default:
 					return ''
